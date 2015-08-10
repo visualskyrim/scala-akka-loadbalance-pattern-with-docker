@@ -1,6 +1,7 @@
-import _root_.TaskMaster._
-import akka.actor.{ActorRef, ActorLogging, Actor}
-import akka.actor.Actor.Receive
+package actors
+
+import actors.TaskMaster._
+import akka.actor.{Actor, ActorLogging, ActorRef}
 
 import scala.collection.mutable
 
@@ -19,7 +20,7 @@ object TaskMaster {
   // Add original sender of task, so that worker can know who send this.
   // In that case, worker can directly send result of the task to the original sender
   // Change the type of `task` to apply more specified task, or you can define you own task.
-  case class TaskTicket(task: Object, taskOwner: ActorRef)
+  case class TaskTicket(task: Any, taskOwner: Option[ActorRef])
 }
 
 
@@ -38,11 +39,11 @@ class TaskMaster extends Actor with ActorLogging {
       notifyFreeWorker()
 
     // when worker send task result back
-    case TaskResponse(worker, taskId, isFinished) =>
+    case TaskResponse(worker, isFinished) =>
       if (isFinished)
-        log.debug(s"task $taskId is finished.")
+        log.debug(s"task is finished.")
       else
-        log.debug(s"task $taskId failed to finish.")
+        log.debug(s"task failed to finish.")
       workers += (worker -> None)
       self ! TaskRequest(worker)
 
@@ -71,8 +72,8 @@ class TaskMaster extends Actor with ActorLogging {
   }
 
   def assignTask(task: Object, worker: ActorRef) = {
-    workers += (worker -> Some(TaskTicket(task, self)))
-    worker ! TaskTicket(task, self)
+    workers += (worker -> Some(TaskTicket(task, Some(self))))
+    worker ! TaskTicket(task, Some(self))
   }
 
   def notifyFreeWorker() = {

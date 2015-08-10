@@ -1,24 +1,30 @@
-import _root_.TaskMaster._
-import _root_.TaskWorker.WorkFinished
-import akka.actor.{ActorRef, ActorPath, ActorLogging, Actor}
-import akka.actor.Actor.Receive
+package actors
+
+import actors.TaskMaster._
+import actors.TaskWorker.WorkFinished
+import akka.actor.{Actor, ActorLogging, ActorPath, ActorRef}
 
 /**
  * Created by kongmu on 8/7/15.
  */
 
 object TaskWorker {
-  case class WorkFinished()
+  case class WorkFinished(isFinished: Boolean = true)
 }
 
 abstract class TaskWorker(masterPath: ActorPath) extends Actor with ActorLogging {
 
   val master = context.actorSelection(masterPath)
 
-  def working(task: Object, masterRef: ActorRef): Receive = {
-    case WorkFinished =>
+  override def preStart() = master ! NewWorker(self)
+
+  // TODO: add postRestart function
+
+  def working(task: Any, masterRef: ActorRef): Receive = {
+    case WorkFinished(isFinished) =>
       log.debug("Worker finished task.")
-      masterRef ! TaskResponse(self)
+      masterRef ! TaskResponse(self, isFinished)
+      context.become(idle)
   }
 
 
@@ -35,11 +41,17 @@ abstract class TaskWorker(masterPath: ActorPath) extends Actor with ActorLogging
 
   }
 
+  def receive = idle
+
   def finish(): Unit = {
-    self ! WorkFinished
+    self ! WorkFinished(isFinished = true)
   }
 
-  def work(taskOwner: ActorRef, task: Object): Unit
+  def fail(): Unit = {
+    self ! WorkFinished(isFinished = false)
+  }
+
+  def work(taskOwner: Option[ActorRef], task: Any): Unit
 
   // define this method if you want to deal with the result of processing
   // def submitWork(workResult: WorkerResult): Unit
