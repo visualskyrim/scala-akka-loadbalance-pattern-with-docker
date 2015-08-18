@@ -13,7 +13,7 @@ class TaskWorkerSpec(_system: ActorSystem)
   with FlatSpecLike
   with BeforeAndAfterAll {
 
-  def this() = this(ActorSystem("HelloAkkaSpec"))
+  def this() = this(ActorSystem("TaskWorkerSpec"))
 
   override def afterAll: Unit = {
     system.shutdown()

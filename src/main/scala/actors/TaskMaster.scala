@@ -12,7 +12,7 @@ import scala.collection.mutable
 // companion object for protocol
 object TaskMaster {
   case class NewWorker(worker: ActorRef)
-  case class TaskList(taskList: List[Object])
+  case class TaskList(taskList: List[Any])
   case class TaskIncoming()
   case class TaskResponse(worker: ActorRef, isFinished: Boolean=true)
   case class TaskRequest(worker: ActorRef)
@@ -79,7 +79,7 @@ class TaskMaster extends Actor with ActorLogging {
   def notifyFreeWorker() = {
     if (taskQueue.nonEmpty)
       workers.foreach {
-        case (worker, m) if m.isEmpty => worker ! TaskIncoming
+        case (worker, m) if m.isEmpty => worker ! TaskIncoming()
         case _ => log.error("Something wired in the worker map!")
       }
   }
