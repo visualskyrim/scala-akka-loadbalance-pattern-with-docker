@@ -1,8 +1,13 @@
+import com.typesafe.sbt.SbtNativePackager._
+import NativePackagerKeys._
+
 name := "hello-akka"
 
 version := "1.0"
 
 scalaVersion := "2.11.6"
+
+packageArchetype.java_server
 
 resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
 

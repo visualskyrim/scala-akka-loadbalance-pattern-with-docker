@@ -5,10 +5,6 @@ import akka.actor.{Actor, ActorLogging, ActorRef}
 
 import scala.collection.mutable
 
-/**
- * Created by kongmu on 8/7/15.
- */
-
 // companion object for protocol
 object TaskMaster {
   case class NewWorker(worker: ActorRef)
@@ -63,9 +59,8 @@ class TaskMaster extends Actor with ActorLogging {
         }
       }
 
+    // when receive tasks
     case TaskList(taskList: List[Object]) =>
-      // TODO: Workload control here!
-      // TODO: Tell the guy who send these tasks to slow down!
       taskQueue.enqueue(taskList: _*)
       notifyFreeWorker()
 
