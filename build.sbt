@@ -1,11 +1,10 @@
+import com.typesafe.sbt.SbtNativePackager.autoImport._
 import com.typesafe.sbt.SbtNativePackager._
 import NativePackagerKeys._
 
-name := "hello-akka"
+name := ""
 
 version := "1.0"
-
-scalaVersion := "2.11.6"
 
 packageArchetype.java_server
 
