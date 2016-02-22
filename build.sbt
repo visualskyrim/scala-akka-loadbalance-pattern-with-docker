@@ -1,12 +1,10 @@
-import com.typesafe.sbt.SbtNativePackager.autoImport._
-import com.typesafe.sbt.SbtNativePackager._
-import NativePackagerKeys._
 
-name := ""
+name := "scala-akka-loadbalance-pattern-with-docker"
 
 version := "1.0"
 
-packageArchetype.java_server
+scalaVersion := "2.11.6"
+
 
 resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
 
