@@ -1,3 +1,7 @@
+import com.typesafe.sbt.SbtNativePackager._
+import NativePackagerKeys._
+
+
 
 name := "scala-akka-loadbalance-pattern-with-docker"
 
