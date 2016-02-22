@@ -4,9 +4,6 @@ import actors.TaskMaster._
 import actors.TaskWorker.WorkFinished
 import akka.actor.{Actor, ActorLogging, ActorPath, ActorRef}
 
-/**
- * Created by kongmu on 8/7/15.
- */
 
 object TaskWorker {
   case class WorkFinished(isFinished: Boolean = true)
@@ -18,7 +15,7 @@ abstract class TaskWorker(masterPath: ActorPath) extends Actor with ActorLogging
 
   override def preStart() = master ! NewWorker(self)
 
-  // TODO: add postRestart function
+  // TODO: add postRestart function for better robustness
 
   def working(task: Any, masterRef: ActorRef): Receive = {
     case WorkFinished(isFinished) =>
