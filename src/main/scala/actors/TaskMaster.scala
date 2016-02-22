@@ -30,6 +30,7 @@ class TaskMaster extends Actor with ActorLogging {
 
     // when new worker spawns
     case NewWorker(worker) =>
+      log.info(s"Master has connected to a worker: ${worker.path}")
       context.watch(worker)
       workers += (worker -> None)
       notifyFreeWorker()
